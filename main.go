@@ -25,6 +25,29 @@ func main() {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
+		// === Validation ทั้งหมดตาม Test Case 5-7 ===
+		if input.TotalIncome < 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "totalIncome must be a positive number"})
+			return
+		}
+		if input.WHT < 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "wht must be a positive number"})
+			return
+		}
+		if input.WHT > input.TotalIncome {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "wht cannot be greater than totalIncome"})
+			return
+		}
+		for _, a := range input.Allowances {
+			if a.AllowanceType != "donation" {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "only 'donation' allowance is allowed"})
+				return
+			}
+			if a.Amount < 0 {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "allowance amount must be a positive number"})
+				return
+			}
+		}
 
 		// === Donation deduction (สูงสุด 100,000) ===
 		donation := 0.0
