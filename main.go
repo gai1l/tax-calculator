@@ -27,27 +27,26 @@ func main() {
 
 		// คำนวณภาษีแบบขั้นบันได (แบบง่ายสุดก่อน)
 		var tax float64
-		if taxable > 2000000 {
-			tax += (taxable - 2000000) * 0.35
-			taxable = 2000000
+		remaining := taxable
+
+		if remaining > 2000000 {
+			tax += (remaining - 2000000) * 0.35
+			remaining = 2000000
 		}
-		if taxable > 1000000 {
-			tax += (taxable - 1000000) * 0.30
-			taxable = 1000000
+		if remaining > 1000000 {
+			tax += (remaining - 1000000) * 0.30
+			remaining = 1000000
 		}
-		if taxable > 500000 {
-			tax += (taxable - 500000) * 0.20
-			taxable = 500000
+		if remaining > 500000 {
+			tax += (remaining - 500000) * 0.20
+			remaining = 500000
 		}
-		if taxable > 150000 {
-			tax += (taxable - 150000) * 0.10
-			taxable = 150000
+		if remaining > 150000 {
+			tax += (remaining - 150000) * 0.10
+			remaining = 150000
 		}
 
 		finalTax := tax - input.WHT
-		if finalTax < 0 {
-			finalTax = 0 // ยังไม่คืนเงิน (test case 1 ยังไม่ต้องการ)
-		}
 
 		c.JSON(http.StatusOK, gin.H{"tax": finalTax})
 	})
